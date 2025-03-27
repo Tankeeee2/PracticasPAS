@@ -1,7 +1,7 @@
 #!/bin/bash
 
-var='"Cadena de prueba"'
+var='Cadena de prueba'
 
-nuevaVar="Valor de 'var' es $var"
+nuevaVar="Valor de 'var' es \"$var\""
 
 echo "$nuevaVar"
