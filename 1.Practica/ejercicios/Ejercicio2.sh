@@ -63,7 +63,7 @@ fi
 
 # -c Crear archivo
 # -z Comprimir
-# -f  Especificar nombre salida
+# -f Especificar nombre salida
 if [ "$comprimir" -eq 1 ]; then
     tar -czf "$ruta_destino" -C "$origen" .
     
