@@ -1,0 +1,20 @@
+: 1743283936:0;chmod +x Ejercicio4.sh
+: 1743284680:0;ifconfig
+: 1743284683:0;ip a
+: 1743285210:0;man test]
+: 1743285212:0;man test
+: 1743285234:0;ifconfig
+: 1743287899:0;chmod +x Ejercicio6.sh
+: 1743287902:0;./Ejercicio6.sh
+: 1743288817:0;cat ~/.zsh_history
+: 1743288856:0;cp Ejercicio6.sh /
+: 1743288864:0;cp Ejercicio6.sh /home/juanjo
+: 1743288866:0;cd
+: 1743288867:0;ls
+: 1743288870:0;./Ejercicio6.sh
+: 1743288895:0;cd Practicas/PracticasPAS/2.Practica/ejercicios
+: 1743288902:0;touch cmd.txt
+: 1743288905:0;./Ejercicio6.sh
+: 1743289066:0;ls -l ~/.zsh_history
+: 1743289098:0;zsh -x Ejercicio6.sh
+: 1743289152:0;./Ejercicio6.sh
