@@ -1,0 +1,8 @@
+[2025-05-18 12:58:55] El nombre de la cola del servidor es: /server_queue-juanjo
+[2025-05-18 12:58:55] El nombre de la cola del cliente es: /client_queue-juanjo
+[2025-05-18 12:58:55] El descriptor de la cola del servidor es: 3
+[2025-05-18 12:58:55] El descriptor de la cola del cliente es: 4
+[2025-05-18 12:59:11] Recibido el mensaje: Hola mundo\n
+[2025-05-18 12:59:11] Enviando respuesta: Número de caracteres recibidos: 12
+[2025-05-18 12:59:24] Recibido el mensaje: exit\n
+[2025-05-18 12:59:24] Enviando respuesta: Número de caracteres recibidos: 6
