@@ -7,14 +7,14 @@
  * del sistema, según las opciones proporcionadas por línea de comandos.
  */
 
+#include <ctype.h>  // Para funciones de clasificación de caracteres (isdigit)
+#include <getopt.h> // Para procesar opciones de línea de comandos (getopt_long)
+#include <grp.h>    // Para acceder a la información de grupos (struct group)
+#include <pwd.h>    // Para acceder a la información de usuarios (struct passwd)
 #include <stdio.h>  // Para funciones de entrada/salida estándar
 #include <stdlib.h> // Para funciones como exit(), atoi(), getenv()
 #include <string.h> // Para funciones de manejo de cadenas
 #include <unistd.h> // Para funciones POSIX básicas
-#include <getopt.h> // Para procesar opciones de línea de comandos (getopt_long)
-#include <pwd.h>    // Para acceder a la información de usuarios (struct passwd)
-#include <grp.h>    // Para acceder a la información de grupos (struct group)
-#include <ctype.h>  // Para funciones de clasificación de caracteres (isdigit)
 
 /**
  * Función: print_help
@@ -30,7 +30,8 @@ void print_help()
     printf("-h, --help                      Imprimir esta ayuda\n");
     printf("-u, --user (<nombre>|<uid>)     Información sobre el usuario\n");
     printf("-a, --active                    Información sobre el usuario activo actual\n");
-    printf("-m, --maingroup                 Además de info de usuario, imprimir la info de su grupo principal\n");
+    printf("-m, --maingroup                 Además de info de usuario, imprimir la info de su "
+           "grupo principal\n");
     printf("-g, --group (<nombre>|<gid>)    Información sobre el grupo\n");
     printf("-s, --allgroups                 Muestra info de todos los grupos del sistema\n");
 }
@@ -56,8 +57,7 @@ void print_help()
 void print_user_info(struct passwd *pwd)
 {
     // Verificamos que la estructura no sea NULL
-    if (pwd == NULL)
-    {
+    if (pwd == NULL) {
         printf("Error: Usuario no encontrado\n");
         return;
     }
@@ -90,8 +90,7 @@ void print_user_info(struct passwd *pwd)
 void print_group_info(struct group *grp)
 {
     // Verificamos que la estructura no sea NULL
-    if (grp == NULL)
-    {
+    if (grp == NULL) {
         printf("Error: Grupo no encontrado\n");
         return;
     }
@@ -103,11 +102,9 @@ void print_group_info(struct group *grp)
     printf("Miembros secundarios:\n");
 
     // Mostramos los miembros secundarios del grupo si existen
-    if (grp->gr_mem != NULL)
-    {
+    if (grp->gr_mem != NULL) {
         // Recorremos el array de miembros hasta encontrar un NULL
-        for (int i = 0; grp->gr_mem[i] != NULL; i++)
-        {
+        for (int i = 0; grp->gr_mem[i] != NULL; i++) {
             printf("%s\n", grp->gr_mem[i]);
         }
     }
@@ -131,17 +128,14 @@ void print_group_info(struct group *grp)
 int is_number(const char *str)
 {
     // Verificamos que la cadena no sea NULL ni vacía
-    if (str == NULL || *str == '\0')
-    {
+    if (str == NULL || *str == '\0') {
         return 0;
     }
 
     // Recorremos cada carácter de la cadena
-    for (int i = 0; str[i] != '\0'; i++)
-    {
+    for (int i = 0; str[i] != '\0'; i++) {
         // Si encontramos un carácter que no es un dígito, retornamos falso
-        if (!isdigit(str[i]))
-        {
+        if (!isdigit(str[i])) {
             return 0;
         }
     }
@@ -164,8 +158,7 @@ void print_all_groups()
 {
     // Abrimos el archivo /etc/group en modo lectura
     FILE *file = fopen("/etc/group", "r");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         perror("Error al abrir /etc/group");
         return;
     }
@@ -175,15 +168,13 @@ void print_all_groups()
     char group_name[64];
 
     // Leemos el archivo línea por línea
-    while (fgets(line, sizeof(line), file))
-    {
+    while (fgets(line, sizeof(line), file)) {
         // Extraemos el nombre del grupo (primer campo antes del ':')
         sscanf(line, "%[^:]", group_name);
 
         // Obtenemos la información completa del grupo usando su nombre
         struct group *grp = getgrnam(group_name);
-        if (grp != NULL)
-        {
+        if (grp != NULL) {
             // Mostramos la información del grupo
             print_group_info(grp);
         }
@@ -230,22 +221,19 @@ int main(int argc, char *argv[])
     // - tiene_argumento: no_argument (0), required_argument (1), optional_argument (2)
     // - flag: Si es NULL, getopt_long retorna valor_retorno; si no, *flag = valor_retorno
     // - valor_retorno: Valor a retornar o asignar a *flag
-    static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"user", required_argument, 0, 'u'},
-        {"active", no_argument, 0, 'a'},
-        {"maingroup", no_argument, 0, 'm'},
-        {"group", required_argument, 0, 'g'},
-        {"allgroups", no_argument, 0, 's'},
-        {0, 0, 0, 0}}; // El último elemento debe ser {0,0,0,0}
+    static struct option long_options[] = {{"help", no_argument, 0, 'h'},
+                                           {"user", required_argument, 0, 'u'},
+                                           {"active", no_argument, 0, 'a'},
+                                           {"maingroup", no_argument, 0, 'm'},
+                                           {"group", required_argument, 0, 'g'},
+                                           {"allgroups", no_argument, 0, 's'},
+                                           {0, 0, 0, 0}}; // El último elemento debe ser {0,0,0,0}
 
     // Procesamos las opciones de línea de comandos
     // getopt_long busca opciones que empiecen con - o --
     // "hu:amg:s" especifica las opciones cortas: h,u:,a,m,g:,s (: indica que requiere argumento)
-    while ((opt = getopt_long(argc, argv, "hu:amg:s", long_options, &option_index)) != -1)
-    {
-        switch (opt)
-        {
+    while ((opt = getopt_long(argc, argv, "hu:amg:s", long_options, &option_index)) != -1) {
+        switch (opt) {
         case 'h': // Opción -h/--help
             print_help();
             return 0;
@@ -273,22 +261,19 @@ int main(int argc, char *argv[])
     }
 
     // Verificamos combinaciones inválidas de opciones
-    if ((user_flag && active_flag) ||                      // No se puede especificar --user y --active
-        (group_flag && allgroups_flag) ||                  // No se puede especificar --group y --allgroups
+    if ((user_flag && active_flag) ||     // No se puede especificar --user y --active
+        (group_flag && allgroups_flag) || // No se puede especificar --group y --allgroups
         (maingroup_flag && !(user_flag || active_flag)) || // --maingroup requiere --user o --active
-        (allgroups_flag && maingroup_flag))                // No se puede combinar --allgroups con --maingroup
+        (allgroups_flag && maingroup_flag)) // No se puede combinar --allgroups con --maingroup
     {
         // Mostramos un mensaje de error específico según el caso
-        if (maingroup_flag && !(user_flag || active_flag))
-        {
+        if (maingroup_flag && !(user_flag || active_flag)) {
             printf("La opción --maingroup sólo puede acompañar a --user o --active\n");
         }
-        else if (allgroups_flag && maingroup_flag)
-        {
+        else if (allgroups_flag && maingroup_flag) {
             printf("La opción --allgroups no puede combinarse con --maingroup\n");
         }
-        else
-        {
+        else {
             printf("Combinación de opciones no válida\n");
         }
 
@@ -296,9 +281,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Si no se especificaron opciones, mostramos información del usuario actual y su grupo principal
-    if (argc == 1)
-    {
+    // Si no se especificaron opciones, mostramos información del usuario actual y su grupo
+    // principal
+    if (argc == 1) {
         active_flag = 1;
         maingroup_flag = 1;
     }
@@ -307,24 +292,20 @@ int main(int argc, char *argv[])
     struct passwd *pwd = NULL;
 
     // Procesamos la opción --user si se especificó
-    if (user_flag)
-    {
+    if (user_flag) {
         // Determinamos si el argumento es un UID (número) o un nombre de usuario
-        if (is_number(user_arg))
-        {
+        if (is_number(user_arg)) {
             // Convertimos el argumento a un UID y obtenemos la información del usuario
             uid_t uid = atoi(user_arg);
             pwd = getpwuid(uid); // getpwuid busca un usuario por su UID
         }
-        else
-        {
+        else {
             // Obtenemos la información del usuario por su nombre
             pwd = getpwnam(user_arg); // getpwnam busca un usuario por su nombre
         }
 
         // Verificamos si se encontró el usuario
-        if (pwd == NULL)
-        {
+        if (pwd == NULL) {
             printf("Error: Usuario '%s' no encontrado\n", user_arg);
             return 1;
         }
@@ -334,20 +315,17 @@ int main(int argc, char *argv[])
     }
 
     // Procesamos la opción --active si se especificó
-    if (active_flag)
-    {
+    if (active_flag) {
         // Obtenemos el nombre del usuario actual de la variable de entorno USER
         char *username = getenv("USER");
-        if (username == NULL)
-        {
+        if (username == NULL) {
             printf("Error: No se pudo obtener el usuario activo\n");
             return 1;
         }
 
         // Obtenemos la información del usuario actual
         pwd = getpwnam(username);
-        if (pwd == NULL)
-        {
+        if (pwd == NULL) {
             printf("Error: Usuario activo no encontrado\n");
             return 1;
         }
@@ -357,12 +335,10 @@ int main(int argc, char *argv[])
     }
 
     // Procesamos la opción --maingroup si se especificó y tenemos información de usuario
-    if (maingroup_flag && pwd != NULL)
-    {
+    if (maingroup_flag && pwd != NULL) {
         // Obtenemos la información del grupo principal del usuario
         struct group *grp = getgrgid(pwd->pw_gid); // getgrgid busca un grupo por su GID
-        if (grp == NULL)
-        {
+        if (grp == NULL) {
             printf("Error: Grupo principal del usuario no encontrado\n");
             return 1;
         }
@@ -372,26 +348,22 @@ int main(int argc, char *argv[])
     }
 
     // Procesamos la opción --group si se especificó
-    if (group_flag)
-    {
+    if (group_flag) {
         struct group *grp = NULL;
 
         // Determinamos si el argumento es un GID (número) o un nombre de grupo
-        if (is_number(group_arg))
-        {
+        if (is_number(group_arg)) {
             // Convertimos el argumento a un GID y obtenemos la información del grupo
             gid_t gid = atoi(group_arg);
             grp = getgrgid(gid);
         }
-        else
-        {
+        else {
             // Obtenemos la información del grupo por su nombre
             grp = getgrnam(group_arg); // getgrnam busca un grupo por su nombre
         }
 
         // Verificamos si se encontró el grupo
-        if (grp == NULL)
-        {
+        if (grp == NULL) {
             printf("Error: Grupo '%s' no encontrado\n", group_arg);
             return 1;
         }
@@ -401,8 +373,7 @@ int main(int argc, char *argv[])
     }
 
     // Procesamos la opción --allgroups si se especificó
-    if (allgroups_flag)
-    {
+    if (allgroups_flag) {
         // Mostramos la información de todos los grupos del sistema
         print_all_groups();
     }

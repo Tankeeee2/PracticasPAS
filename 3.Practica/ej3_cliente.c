@@ -50,30 +50,24 @@ void cleanup()
     char msgbuf[100]; // Buffer para mensajes de log
 
     // Cerramos la cola del servidor si está abierta
-    if (server_queue != -1)
-    {
+    if (server_queue != -1) {
         // mq_close cierra el descriptor de la cola pero no la elimina
-        if (mq_close(server_queue) == -1)
-        {
+        if (mq_close(server_queue) == -1) {
             sprintf(msgbuf, "Error al cerrar la cola del servidor: %s", strerror(errno));
             funcionLog(msgbuf, LOG_FILE);
         }
-        else
-        {
+        else {
             funcionLog("Cola del servidor cerrada", LOG_FILE);
         }
     }
 
     // Cerramos la cola del cliente si está abierta
-    if (client_queue != -1)
-    {
-        if (mq_close(client_queue) == -1)
-        {
+    if (client_queue != -1) {
+        if (mq_close(client_queue) == -1) {
             sprintf(msgbuf, "Error al cerrar la cola del cliente: %s", strerror(errno));
             funcionLog(msgbuf, LOG_FILE);
         }
-        else
-        {
+        else {
             funcionLog("Cola del cliente cerrada", LOG_FILE);
         }
     }
@@ -93,15 +87,14 @@ void handle_signal(int sig)
 {
     char msgbuf[100];
     // Registramos qué señal se recibió (SIGINT o SIGTERM)
-    sprintf(msgbuf, "Recibida señal %d (%s), terminando...", sig, (sig == SIGINT) ? "SIGINT" : "SIGTERM");
+    sprintf(msgbuf, "Recibida señal %d (%s), terminando...", sig,
+            (sig == SIGINT) ? "SIGINT" : "SIGTERM");
     funcionLog(msgbuf, LOG_FILE);
 
     // Enviamos un mensaje de salida al servidor para que también termine
-    if (server_queue != -1)
-    {
+    if (server_queue != -1) {
         funcionLog("Enviando mensaje de salida al servidor", LOG_FILE);
-        if (mq_send(server_queue, MSG_EXIT, strlen(MSG_EXIT) + 1, 0) == -1)
-        {
+        if (mq_send(server_queue, MSG_EXIT, strlen(MSG_EXIT) + 1, 0) == -1) {
             sprintf(msgbuf, "Error al enviar mensaje de salida: %s", strerror(errno));
             funcionLog(msgbuf, LOG_FILE);
         }
@@ -135,14 +128,12 @@ int main()
 
     // Configuramos los manejadores de señales
     // SIGINT (Ctrl+C) y SIGTERM son señales comunes para terminar procesos
-    if (signal(SIGINT, handle_signal) == SIG_ERR)
-    {
+    if (signal(SIGINT, handle_signal) == SIG_ERR) {
         funcionLog("Error al establecer el manejador de SIGINT", LOG_FILE);
         return EXIT_FAILURE;
     }
 
-    if (signal(SIGTERM, handle_signal) == SIG_ERR)
-    {
+    if (signal(SIGTERM, handle_signal) == SIG_ERR) {
         funcionLog("Error al establecer el manejador de SIGTERM", LOG_FILE);
         return EXIT_FAILURE;
     }
@@ -163,8 +154,7 @@ int main()
     // O_WRONLY: Abre la cola solo para escritura (el cliente escribe mensajes al servidor)
     // No usamos O_CREAT porque asumimos que el servidor ya ha creado la cola
     server_queue = mq_open(server_queue_name, O_WRONLY);
-    if (server_queue == -1)
-    {
+    if (server_queue == -1) {
         sprintf(msgbuf, "Error al abrir la cola del servidor: %s", strerror(errno));
         funcionLog(msgbuf, LOG_FILE);
         funcionLog("Asegúrese de que el servidor está en ejecución", LOG_FILE);
@@ -177,8 +167,7 @@ int main()
     // Abrimos la cola del cliente para lectura
     // O_RDONLY: Abre la cola solo para lectura (el cliente lee respuestas del servidor)
     client_queue = mq_open(client_queue_name, O_RDONLY);
-    if (client_queue == -1)
-    {
+    if (client_queue == -1) {
         sprintf(msgbuf, "Error al abrir la cola del cliente: %s", strerror(errno));
         funcionLog(msgbuf, LOG_FILE);
         // Si hay error, cerramos la cola del servidor que ya habíamos abierto
@@ -194,23 +183,19 @@ int main()
 
     // Bucle principal del cliente
     // El cliente se ejecuta hasta que el usuario escriba "exit" o se reciba una señal
-    while (running)
-    {
+    while (running) {
         // Mostramos un prompt para que el usuario sepa que puede escribir
         printf("> ");
         fflush(stdout); // Forzamos la salida del buffer para que se muestre el prompt
 
         // Leemos una línea de la entrada estándar (teclado)
-        if (fgets(buffer, MAX_SIZE, stdin) == NULL)
-        {
+        if (fgets(buffer, MAX_SIZE, stdin) == NULL) {
             // Verificamos si llegamos al final de la entrada (Ctrl+D)
-            if (feof(stdin))
-            {
+            if (feof(stdin)) {
                 funcionLog("Fin de entrada estándar, terminando...", LOG_FILE);
                 break;
             }
-            else
-            {
+            else {
                 // Otro tipo de error al leer
                 sprintf(msgbuf, "Error al leer de stdin: %s", strerror(errno));
                 funcionLog(msgbuf, LOG_FILE);
@@ -220,25 +205,21 @@ int main()
 
         // Eliminamos el carácter de nueva línea (\n) del final si existe
         size_t len = strlen(buffer);
-        if (len > 0 && buffer[len - 1] == '\n')
-        {
+        if (len > 0 && buffer[len - 1] == '\n') {
             buffer[len - 1] = '\0'; // Reemplazamos \n por \0 (fin de cadena)
             len--;                  // Actualizamos la longitud
         }
 
         // Si la línea está vacía, volvemos al inicio del bucle
-        if (len == 0)
-        {
+        if (len == 0) {
             continue;
         }
 
         // Verificamos si el usuario quiere salir
-        if (strcmp(buffer, MSG_EXIT) == 0)
-        {
+        if (strcmp(buffer, MSG_EXIT) == 0) {
             funcionLog("Enviando mensaje de salida, terminando...", LOG_FILE);
             // Enviamos el mensaje de salida al servidor
-            if (mq_send(server_queue, buffer, strlen(buffer) + 1, 0) == -1)
-            {
+            if (mq_send(server_queue, buffer, strlen(buffer) + 1, 0) == -1) {
                 sprintf(msgbuf, "Error al enviar mensaje: %s", strerror(errno));
                 funcionLog(msgbuf, LOG_FILE);
             }
@@ -255,8 +236,7 @@ int main()
         // - buffer: Mensaje a enviar
         // - strlen(buffer) + 1: Longitud del mensaje (incluyendo el carácter nulo)
         // - 0: Prioridad del mensaje (0 es la más baja)
-        if (mq_send(server_queue, buffer, strlen(buffer) + 1, 0) == -1)
-        {
+        if (mq_send(server_queue, buffer, strlen(buffer) + 1, 0) == -1) {
             sprintf(msgbuf, "Error al enviar mensaje: %s", strerror(errno));
             funcionLog(msgbuf, LOG_FILE);
             break; // Salimos del bucle en caso de error
@@ -268,8 +248,7 @@ int main()
         ssize_t bytes_read = mq_receive(client_queue, buffer, MAX_SIZE, &prio);
 
         // Verificamos si hubo error en la recepción
-        if (bytes_read < 0)
-        {
+        if (bytes_read < 0) {
             sprintf(msgbuf, "Error al recibir respuesta: %s", strerror(errno));
             funcionLog(msgbuf, LOG_FILE);
             break; // Salimos del bucle en caso de error

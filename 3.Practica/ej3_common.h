@@ -13,16 +13,16 @@
 #ifndef EJ3_COMMON_H
 #define EJ3_COMMON_H
 
+#include <errno.h>     // Para códigos de error (errno)
+#include <mqueue.h>    // Para funciones de colas de mensajes POSIX (mq_*)
+#include <signal.h>    // Para manejo de señales
 #include <stdio.h>     // Para funciones de entrada/salida estándar
 #include <stdlib.h>    // Para funciones como exit(), getenv()
 #include <string.h>    // Para funciones de manejo de cadenas
-#include <mqueue.h>    // Para funciones de colas de mensajes POSIX (mq_*)
 #include <sys/stat.h>  // Para constantes de modo de archivos (permisos)
 #include <sys/types.h> // Para tipos como pid_t
-#include <unistd.h>    // Para funciones POSIX básicas
 #include <time.h>      // Para funciones de manejo de tiempo
-#include <errno.h>     // Para códigos de error (errno)
-#include <signal.h>    // Para manejo de señales
+#include <unistd.h>    // Para funciones POSIX básicas
 
 /**
  * Nombres base para las colas de mensajes
@@ -69,8 +69,7 @@ void get_queue_name(char *queue_name, const char *base_name)
 {
     // Obtenemos el nombre de usuario de la variable de entorno USER
     char *username = getenv("USER");
-    if (username == NULL)
-    {
+    if (username == NULL) {
         // Si no se puede obtener el nombre de usuario, usamos "unknown"
         username = "unknown";
     }
@@ -111,8 +110,7 @@ void funcionLog(const char *mensaje, const char *logFileName)
     // Abrimos el archivo de log en modo append (añadir al final)
     // Si el archivo no existe, se crea
     file = fopen(logFileName, "a");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         perror("Error opening log file");
         return;
     }

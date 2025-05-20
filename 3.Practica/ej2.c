@@ -40,8 +40,7 @@ int main()
     // - fildes[0] es el extremo de lectura
     // - fildes[1] es el extremo de escritura
     status = pipe(fildes);
-    if (status == -1)
-    {
+    if (status == -1) {
         // Si hay un error al crear la tubería, mostramos el mensaje y terminamos
         perror("Error en pipe");
         exit(EXIT_FAILURE);
@@ -52,8 +51,7 @@ int main()
     // - -1 en caso de error
     // - 0 en el proceso hijo
     // - PID del hijo en el proceso padre
-    switch (fork())
-    {
+    switch (fork()) {
     case -1: // Error al crear el proceso hijo
         perror("No se ha podido crear el proceso hijo...");
         exit(EXIT_FAILURE);
@@ -61,8 +59,7 @@ int main()
     case 0: // Código ejecutado por el proceso hijo
         // El hijo solo necesita leer de la tubería, así que cerramos el extremo de escritura
         // Esto es una buena práctica para liberar recursos y evitar bloqueos
-        if (close(fildes[1]) == -1)
-        {
+        if (close(fildes[1]) == -1) {
             perror("Error en close");
             exit(EXIT_FAILURE);
         }
@@ -72,20 +69,17 @@ int main()
         // disponibles o hasta que se cierre el otro extremo de la tubería
         nbytes = read(fildes[0], buf, BSIZE);
 
-        if (nbytes == -1)
-        {
+        if (nbytes == -1) {
             // Error al leer de la tubería
             perror("Error en read");
             exit(EXIT_FAILURE);
         }
-        else if (nbytes == 0)
-        {
+        else if (nbytes == 0) {
             // Si read() devuelve 0, significa que el otro extremo de la tubería se ha cerrado
             // y no hay más datos para leer (EOF - End Of File)
             printf("[HIJO]: Detecto que mi padre ha cerrado la tuberia...\n");
         }
-        else
-        {
+        else {
             // Convertimos la cadena recibida a un número flotante
             float result;
             sscanf(buf, "%f", &result);
@@ -93,13 +87,11 @@ int main()
         }
 
         // Cerramos el extremo de lectura de la tubería cuando ya no lo necesitamos
-        if (close(fildes[0]) == -1)
-        {
+        if (close(fildes[0]) == -1) {
             perror("Error en close");
             exit(EXIT_FAILURE);
         }
-        else
-        {
+        else {
             printf("[HIJO]: Tuberia cerrada.\n");
         }
 
@@ -108,8 +100,7 @@ int main()
 
     default: // Código ejecutado por el proceso padre
         // El padre solo necesita escribir en la tubería, así que cerramos el extremo de lectura
-        if (close(fildes[0]) == -1)
-        {
+        if (close(fildes[0]) == -1) {
             perror("Error en close");
             exit(EXIT_FAILURE);
         }
@@ -134,38 +125,32 @@ int main()
 
         // write() escribe la cadena en la tubería
         // strlen(buf) + 1 incluye el carácter nulo de terminación
-        if (write(fildes[1], buf, strlen(buf) + 1) == -1)
-        {
+        if (write(fildes[1], buf, strlen(buf) + 1) == -1) {
             perror("Error en write");
             exit(EXIT_FAILURE);
         }
 
         // Cerramos el extremo de escritura de la tubería cuando ya no lo necesitamos
         // Esto es importante para que el proceso hijo pueda detectar el EOF
-        if (close(fildes[1]) == -1)
-        {
+        if (close(fildes[1]) == -1) {
             perror("Error en close");
             exit(EXIT_FAILURE);
         }
-        else
-        {
+        else {
             printf("[PADRE]: Tuberia cerrada.\n");
         }
 
         // Esperamos a que el proceso hijo termine
         // wait() bloquea al proceso padre hasta que un hijo termine
         // Recorremos todos los hijos (en este caso solo hay uno)
-        while ((flag = wait(&status)) > 0)
-        {
-            if (WIFEXITED(status))
-            {
+        while ((flag = wait(&status)) > 0) {
+            if (WIFEXITED(status)) {
                 // WIFEXITED comprueba si el hijo terminó normalmente (con exit)
                 // WEXITSTATUS obtiene el código de salida del hijo
-                printf("Proceso Padre, Hijo con PID %ld finalizado, status = %d\n",
-                       (long int)flag, WEXITSTATUS(status));
+                printf("Proceso Padre, Hijo con PID %ld finalizado, status = %d\n", (long int)flag,
+                       WEXITSTATUS(status));
             }
-            else if (WIFSIGNALED(status))
-            {
+            else if (WIFSIGNALED(status)) {
                 // WIFSIGNALED comprueba si el hijo terminó debido a una señal
                 // WTERMSIG obtiene el número de la señal que causó la terminación
                 printf("Proceso Padre, Hijo con PID %ld finalizado al recibir la señal %d\n",
@@ -174,16 +159,16 @@ int main()
         }
 
         // Comprobamos si wait() terminó porque no hay más hijos
-        if (flag == (pid_t)-1 && errno == ECHILD)
-        {
+        if (flag == (pid_t)-1 && errno == ECHILD) {
             // ECHILD indica que no hay procesos hijos que esperar
-            printf("Proceso Padre %d, no hay mas hijos que esperar. Valor de errno = %d, definido como: %s\n",
+            printf("Proceso Padre %d, no hay mas hijos que esperar. Valor de errno = %d, definido "
+                   "como: %s\n",
                    getpid(), errno, strerror(errno));
         }
-        else
-        {
+        else {
             // Cualquier otro error en wait()
-            printf("Error en la invocacion de wait o waitpid. Valor de errno = %d, definido como: %s\n",
+            printf("Error en la invocacion de wait o waitpid. Valor de errno = %d, definido como: "
+                   "%s\n",
                    errno, strerror(errno));
             exit(EXIT_FAILURE);
         }
