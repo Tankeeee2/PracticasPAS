@@ -1,0 +1,56 @@
+---
+# Estilo base: K&R/Stroustrup
+BasedOnStyle: LLVM
+# Estilo de llaves: K&R/Stroustrup (llaves en la misma línea)
+BreakBeforeBraces: Stroustrup
+
+# Indentación
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: false
+
+# Espaciado
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeSquareBrackets: false
+
+# Longitud de línea
+ColumnLimit: 100
+ReflowComments: true
+
+# Alineación
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignEscapedNewlines: Right
+AlignOperands: true
+AlignTrailingComments: true
+
+# Saltos de línea
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+
+# Parámetros de función
+BinPackArguments: true
+BinPackParameters: true
+
+# Otras opciones
+FixNamespaceComments: true
+IncludeBlocks: Preserve
+IndentPPDirectives: None
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+PointerAlignment: Right
+SortIncludes: true
+SortUsingDeclarations: true
