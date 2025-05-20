@@ -1,4 +1,11 @@
+# Ignorar archivos objeto y ejecutables
 *.o
 *.out
 *.exe
+
+# Ignorar archivos sin extensión (como ej1, ej2, etc.)
 [^.]*
+
+# Excepciones - archivos que queremos incluir
+!README.md
+!.gitignore
