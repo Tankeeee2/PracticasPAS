@@ -65,8 +65,7 @@
  * En sistemas compartidos, es importante que cada usuario tenga sus propias
  * colas para evitar interferencias entre diferentes ejecuciones del programa.
  */
-void get_queue_name(char *queue_name, const char *base_name)
-{
+void get_queue_name(char *queue_name, const char *base_name) {
     // Obtenemos el nombre de usuario de la variable de entorno USER
     char *username = getenv("USER");
     if (username == NULL) {
@@ -93,8 +92,7 @@ void get_queue_name(char *queue_name, const char *base_name)
  * El formato de cada entrada en el log es:
  * [YYYY-MM-DD HH:MM:SS] mensaje
  */
-void funcionLog(const char *mensaje, const char *logFileName)
-{
+void funcionLog(const char *mensaje, const char *logFileName) {
     FILE *file;
     time_t t;
     struct tm *tm_info;

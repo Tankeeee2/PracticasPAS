@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "ej3_common.h": "c"
+        "ej3_common.h": "c",
+        "cstdlib": "c"
     }
 }

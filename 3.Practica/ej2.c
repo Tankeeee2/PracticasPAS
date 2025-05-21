@@ -21,8 +21,7 @@
 #include <time.h>     // Para time(), usado para inicializar la semilla aleatoria
 #include <unistd.h>   // Para funciones POSIX como pipe(), fork(), read(), write()
 
-int main()
-{
+int main() {
     pid_t flag;            // Almacena el PID del proceso hijo retornado por wait()
     int status;            // Almacena el estado de salida del proceso hijo
     int fildes[2];         // Array para los descriptores de la tubería [0]=lectura, [1]=escritura

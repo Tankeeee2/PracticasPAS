@@ -45,8 +45,7 @@ int running = 1;
  * A diferencia del servidor, el cliente no elimina (unlink) las colas,
  * ya que esa responsabilidad corresponde al servidor.
  */
-void cleanup()
-{
+void cleanup() {
     char msgbuf[100]; // Buffer para mensajes de log
 
     // Cerramos la cola del servidor si está abierta
@@ -83,8 +82,7 @@ void cleanup()
  * Parámetros:
  *   - sig: Número de la señal recibida
  */
-void handle_signal(int sig)
-{
+void handle_signal(int sig) {
     char msgbuf[100];
     // Registramos qué señal se recibió (SIGINT o SIGTERM)
     sprintf(msgbuf, "Recibida señal %d (%s), terminando...", sig,
@@ -120,8 +118,7 @@ void handle_signal(int sig)
  *   - EXIT_SUCCESS si el programa termina correctamente
  *   - EXIT_FAILURE si ocurre algún error
  */
-int main()
-{
+int main() {
     char buffer[MAX_SIZE]; // Buffer para almacenar mensajes enviados/recibidos
     char msgbuf[MAX_SIZE]; // Buffer para mensajes de log
     unsigned int prio = 1; // Prioridad para recepción de mensajes

@@ -43,8 +43,7 @@ mqd_t client_queue = -1;
  * Esta función se llama tanto al finalizar normalmente como
  * cuando se recibe una señal de terminación.
  */
-void cleanup()
-{
+void cleanup() {
     char msgbuf[100]; // Buffer para mensajes de log
 
     // Cerramos la cola del servidor si está abierta
@@ -104,8 +103,7 @@ void cleanup()
  * Parámetros:
  *   - sig: Número de la señal recibida
  */
-void handle_signal(int sig)
-{
+void handle_signal(int sig) {
     char msgbuf[100];
     sprintf(msgbuf, "Recibida señal %d, terminando...", sig);
     funcionLog(msgbuf, LOG_FILE);
@@ -128,8 +126,7 @@ void handle_signal(int sig)
  *   - EXIT_SUCCESS si el programa termina correctamente
  *   - EXIT_FAILURE si ocurre algún error
  */
-int main()
-{
+int main() {
     char buffer[MAX_SIZE]; // Buffer para almacenar mensajes recibidos/enviados
     char msgbuf[MAX_SIZE]; // Buffer para mensajes de log
     unsigned int prio = 1; // Prioridad para recepción de mensajes

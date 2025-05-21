@@ -23,8 +23,7 @@
  * Esta función se llama cuando se usa la opción -h/--help o cuando hay un error
  * en los parámetros proporcionados.
  */
-void print_help()
-{
+void print_help() {
     printf("Uso del programa: ejercicio1 [opciones]\n");
     printf("Opciones:\n");
     printf("-h, --help                      Imprimir esta ayuda\n");
@@ -54,8 +53,7 @@ void print_help()
  *   - pw_dir: Directorio home del usuario
  *   - pw_shell: Shell por defecto del usuario
  */
-void print_user_info(struct passwd *pwd)
-{
+void print_user_info(struct passwd *pwd) {
     // Verificamos que la estructura no sea NULL
     if (pwd == NULL) {
         printf("Error: Usuario no encontrado\n");
@@ -87,8 +85,7 @@ void print_user_info(struct passwd *pwd)
  *   - gr_gid: ID del grupo (GID)
  *   - gr_mem: Array de punteros a cadenas con los nombres de los miembros secundarios
  */
-void print_group_info(struct group *grp)
-{
+void print_group_info(struct group *grp) {
     // Verificamos que la estructura no sea NULL
     if (grp == NULL) {
         printf("Error: Grupo no encontrado\n");
@@ -125,8 +122,7 @@ void print_group_info(struct group *grp)
  * Esta función se utiliza para determinar si un argumento debe interpretarse
  * como un UID/GID numérico o como un nombre de usuario/grupo.
  */
-int is_number(const char *str)
-{
+int is_number(const char *str) {
     // Verificamos que la cadena no sea NULL ni vacía
     if (str == NULL || *str == '\0') {
         return 0;
@@ -154,8 +150,7 @@ int is_number(const char *str)
  * en formato de texto, con campos separados por dos puntos (:).
  * Formato: nombre_grupo:contraseña:GID:lista_miembros
  */
-void print_all_groups()
-{
+void print_all_groups() {
     // Abrimos el archivo /etc/group en modo lectura
     FILE *file = fopen("/etc/group", "r");
     if (file == NULL) {
@@ -198,8 +193,7 @@ void print_all_groups()
  *   - 0 si el programa se ejecuta correctamente
  *   - 1 si hay algún error
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // Variables para el procesamiento de opciones
     int opt;              // Almacena la opción actual procesada por getopt_long
     int option_index = 0; // Índice de la opción larga actual
