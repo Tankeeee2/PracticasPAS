@@ -3,9 +3,22 @@
 *.out
 *.exe
 
-# Ignorar archivos sin extensión (como ej1, ej2, etc.)
-[^.]*
+# Ignorar ejecutables sin extensión (archivos sin punto)
+# Primero incluimos todo
+*
 
-# Excepciones - archivos que queremos incluir
+# Luego excluimos directorios (los permitimos)
+!*/
+
+# Permitimos archivos con extensión
+!*.*
+
+# Pero volvemos a ignorar los tipos específicos que no queremos
+*.o
+*.out
+*.exe
+
+# Excepciones específicas - archivos que queremos incluir
 !README.md
 !.gitignore
+!Makefile
